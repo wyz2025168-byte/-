@@ -37,17 +37,23 @@ export class AppComponent {
   currentStage = signal(0);
   isEditMode = signal(false);
 
-  finalLetter = signal(`亲爱的，
+  finalLetter = signal(`亲爱的希宝贝，
   
-二十岁，花开的年纪。
-回首这一路，我们从陌生到熟悉，从小心翼翼到无话不谈。
-你笑起来的样子，是我见过最美的风景。
+二十岁，生日快乐~
+这是你成年后的第一个大生日，也是我陪你度过的第三个。
+人生难免有遗憾，这次美中不足的就是没能在你身边，
+我相信这一切都只是暂时的，希望未来你的每一年生日，我都不会缺席。
 
-未来的日子很长，但我已经准备好了一千种爱你的方式。
-生日快乐，我的公主。
+近两年多以来，我一直处于一种相对忙的状态，
+当我真的停下来，回顾我们走过的点点滴滴，才惊觉时间过得太快。
+
+
+
+
+生日快乐，我的女孩。
 
 永远爱你的，
-X`);
+奕哥哥);
 
   backgroundPhotos = signal([
     'https://picsum.photos/seed/romance1/1920/1080',
@@ -58,10 +64,10 @@ X`);
 
   // STAGE 1 DATA: STATS
   relationshipStats = signal([
-    { icon: '📅', value: 865, label: 'Days Together', description: '从我们相遇的第一天起，每一天都是限量版。' },
-    { icon: '📸', value: 4280, label: 'Photos Taken', description: '虽然你总说还要再修图，但在我眼里每一张都很美。' },
-    { icon: '🎬', value: 52, label: 'Movies Watched', description: '哭过笑过的那些电影院角落，都藏着我们的回忆。' },
-    { icon: '✈️', value: 1000, label: 'KMs Traveled', description: '只要是和你一起，无论去哪里都是最好的旅行。' }
+    { icon: '📅', value: 834, label: 'Days Together', description: '从我们相遇的第一天起，每一天都是限量版。' },
+    { icon: '📸', value: 1000+, label: 'Photos Taken', description: '虽然你总说还要再修图，但在我眼里每一张都很美。' },
+    { icon: '🎬', value: 100+, label: 'Movies Watched', description: '哭过笑过的那些瞬间，都藏着我们的回忆。' },
+    { icon: '✈️', value: 12, label: 'KMs Traveled', description: '只要是和你一起，无论去哪里都是最好的旅行。' }
   ]);
 
   // STAGE 2 DATA: MEMORIES (Timeline)
