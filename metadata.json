@@ -1,0 +1,8 @@
+{
+  "name": "Lumina - 20th Birthday Memory Architect",
+  "description": "A high-end design tool to curate memories, photos, and AI-assisted letters for a special 20th birthday celebration.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ]
+}
