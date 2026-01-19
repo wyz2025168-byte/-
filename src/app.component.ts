@@ -2,6 +2,7 @@ import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TimelineViewComponent } from './components/timeline-view.component';
 import { GalleryViewComponent } from './components/gallery-view.component';
+import { PhotoAlbumComponent } from './components/photo-album.component';
 import { BackgroundSliderComponent } from './components/background-slider.component';
 import { LetterViewComponent } from './components/letter-view.component';
 import { AiComposerComponent } from './components/ai-composer.component';
@@ -17,7 +18,8 @@ import { AudioService } from './services/audio.service';
   imports: [
     CommonModule, 
     TimelineViewComponent, 
-    GalleryViewComponent, 
+    GalleryViewComponent,
+    PhotoAlbumComponent,
     BackgroundSliderComponent,
     LetterViewComponent,
     AiComposerComponent,
@@ -31,7 +33,7 @@ import { AudioService } from './services/audio.service';
 export class AppComponent {
   private audioService = inject(AudioService);
 
-  // Flow: 0:Intro -> 1:Stats -> 2:Timeline -> 3:Gallery -> 4:BucketList -> 5:Letter
+  // Flow: 0:Intro -> 1:Stats -> 2:Timeline -> 3:Gallery/Album -> 4:BucketList -> 5:Letter
   currentStage = signal(0);
   isEditMode = signal(false);
 

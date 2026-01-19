@@ -105,14 +105,16 @@
       </div>
     }
 
-    <!-- STAGE 3: GALLERY -->
+    <!-- STAGE 3: PHOTO ALBUM (New) -->
     @if (currentStage() === 3) {
       <div class="w-full animate-fade-in pt-24 h-full">
         <div class="text-center mb-20">
            <h2 class="font-serif text-5xl md:text-7xl mb-4 text-white drop-shadow-lg">定格 · 瞬间</h2>
-           <p class="text-rose-300/80 text-xs tracking-[0.5em] uppercase">Visual Poetry</p>
+           <p class="text-rose-300/80 text-xs tracking-[0.5em] uppercase">Photo Album</p>
         </div>
-        <app-gallery-view [items]="memories()" />
+        
+        <!-- Replaced GalleryView with PhotoAlbumComponent -->
+        <app-photo-album [items]="memories()" />
         
         <div class="flex justify-center mt-12 pb-32">
            <button (click)="nextStage()" class="group relative inline-flex items-center justify-center px-8 py-3 overflow-hidden font-medium tracking-tighter text-white bg-rose-900/40 rounded-full border border-rose-500/30">
