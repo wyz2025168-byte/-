@@ -14,15 +14,18 @@ export class AudioService {
   private defaultVolume = 0.4;
 
   constructor() {
-    this.bgmAudio = new Audio();
-    this.bgmAudio.loop = true;
-    this.voiceAudio = new Audio();
+    // Only initialize in browser environment
+    if (typeof window !== 'undefined') {
+      this.bgmAudio = new Audio();
+      this.bgmAudio.loop = true;
+      this.voiceAudio = new Audio();
 
-    // Listen to voice end to restore BGM
-    this.voiceAudio.onended = () => {
-      this.isVoicePlaying.set(false);
-      this.fadeBgmVolume(this.defaultVolume);
-    };
+      // Listen to voice end to restore BGM
+      this.voiceAudio.onended = () => {
+        this.isVoicePlaying.set(false);
+        this.fadeBgmVolume(this.defaultVolume);
+      };
+    }
   }
 
   init(startUrl?: string) {
@@ -34,13 +37,26 @@ export class AudioService {
 
   async playBgm() {
     if (!this.bgmAudio) return;
-    try {
+    
+    // Don't reset src if it's the same, avoids reloading/interruption
+    if (this.bgmAudio.src !== this.currentTrack()) {
       this.bgmAudio.src = this.currentTrack();
-      this.bgmAudio.volume = this.defaultVolume;
+    }
+    
+    this.bgmAudio.volume = this.defaultVolume;
+    
+    try {
       await this.bgmAudio.play();
       this.isPlaying.set(true);
-    } catch (e) {
-      console.warn('Autoplay blocked', e);
+    } catch (e: any) {
+      // Ignore abort/interrupted errors which are common with rapid toggling
+      if (e.name !== 'AbortError' && e.message?.indexOf('interrupted') === -1) {
+         console.warn('Autoplay blocked or BGM error:', e);
+      }
+      // If play failed, ensure state reflects that
+      if (this.bgmAudio.paused) {
+        this.isPlaying.set(false);
+      }
     }
   }
 
@@ -69,8 +85,10 @@ export class AudioService {
   async playVoiceNote(url: string) {
     if (!this.voiceAudio) return;
 
-    // 1. Stop previous voice if any
+    // 1. Reset state
+    // We pause synchronously. If a previous play() is pending, it will reject with AbortError.
     this.voiceAudio.pause();
+    this.voiceAudio.currentTime = 0;
     
     // 2. Duck BGM
     this.fadeBgmVolume(0.1); 
@@ -80,10 +98,22 @@ export class AudioService {
     this.voiceAudio.src = url;
     try {
       await this.voiceAudio.play();
-    } catch (e) {
-      console.error('Voice play failed', e);
-      this.isVoicePlaying.set(false);
-      this.fadeBgmVolume(this.defaultVolume);
+    } catch (e: any) {
+      // Ignore specific race-condition errors
+      if (e.name !== 'AbortError' && e.message?.indexOf('interrupted') === -1) {
+        console.error('Voice play failed', e);
+      }
+
+      // Cleanup if actual playback isn't happening
+      // We check if we are still "supposed" to be playing according to our signal
+      // If the user clicked stop, isVoicePlaying is false.
+      // If play failed due to error, voiceAudio.paused is true.
+      if (this.voiceAudio.paused) {
+         // Only reset global state if we aren't legitimately paused by user interaction logic elsewhere
+         // But here, failure to play means we should revert to BGM
+         this.isVoicePlaying.set(false);
+         this.fadeBgmVolume(this.defaultVolume);
+      }
     }
   }
 
@@ -97,6 +127,7 @@ export class AudioService {
 
   private fadeBgmVolume(target: number) {
     if (!this.bgmAudio) return;
+    
     // Simple linear interpolation could go here, but setting directly is snappy enough for web
     // For smoother effect:
     const step = 0.05;
